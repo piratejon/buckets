@@ -1,6 +1,6 @@
 AC_PREREQ([2.59])
-AC_INIT([example], [0.1], [js AT piratejon DOT com])
-AC_CONFIG_SRCDIR([src/example.c])
+AC_INIT([ds], [0.1], [js AT piratejon DOT com])
+AC_CONFIG_SRCDIR([src/ds.c])
 
 # place to put some extra build scripts installed
 AC_CONFIG_AUX_DIR([build-aux])
