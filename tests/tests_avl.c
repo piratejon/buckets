@@ -30,14 +30,25 @@ void avl_tree_init_destroy ( void )
 
 void avl_tree_insert_elements ( void )
 {
-  IntBucket p;
-  p.p = 9;
+  IntBucket *a,*b,*c,*d,*e,*f,*g,*h;
+  a = malloc(sizeof(IntBucket));
+  b = malloc(sizeof(IntBucket));
 
   AVLTree * t = init_avl_tree(sizeof(IntBucket), &bucket_int_compare);
 
-  avl_tree_insert ( t, &p );
+  a->p = 99;
+  b->p = 8;
+
+  avl_tree_insert ( t, a );
+  avl_tree_insert ( t, b );
+
+  ASSERT ( t->root->bucket->p == 99, "Wrong value for root" );
+  ASSERT ( t->root->left->bucket->p == 8, "Wrong value for left child" );
 
   destroy_avl_tree(t);
+
+  free(b);
+  free(a);
 }
 
 void do_tests ( void )
