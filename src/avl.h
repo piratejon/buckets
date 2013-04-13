@@ -8,6 +8,7 @@ typedef struct _tag_avltree {
 
 AVLTree * init_avl_tree ( size_t bucket_size );
 void destroy_avl_tree ( AVLTree *);
+void avl_tree_insert ( AVLTree *, void * );
 
 #endif // _JS_AVL_H
 

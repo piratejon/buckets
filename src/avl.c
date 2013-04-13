@@ -14,3 +14,7 @@ void destroy_avl_tree ( AVLTree * t ) {
   free(t);
 }
 
+void avl_tree_insert ( AVLTree * t, void * p ) {
+  return;
+}
+
