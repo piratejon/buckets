@@ -14,9 +14,19 @@ void avl_tree_init_destroy ( void )
   destroy_avl_tree ( t );
 }
 
+void avl_tree_insert_element ( void )
+{
+  AVLTree * t = init_avl_tree(sizeof(int));
+
+  avl_tree_insert ( t, 9 );
+
+  destroy_avl_tree(t);
+}
+
 void do_tests ( void )
 {
   TEST ( sanity_check_zero );
   TEST ( avl_tree_init_destroy );
+  TEST ( avl_tree_insert_element );
 }
 
