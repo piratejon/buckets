@@ -10,3 +10,7 @@ AVLTree * init_avl_tree ( size_t bucket_size ) {
   return out;
 }
 
+void destroy_avl_tree ( AVLTree * t ) {
+  free(t);
+}
+
