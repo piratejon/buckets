@@ -4,6 +4,8 @@
 #include "avl.h"
 
 AVLTree * init_avl_tree ( size_t bucket_size ) {
-  return 99;
+  AVLTree * out = malloc(sizeof(AVLTree));
+  out->bucket_size = bucket_size;
+  return out;
 }
 
