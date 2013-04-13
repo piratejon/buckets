@@ -28,7 +28,7 @@ void avl_tree_init_destroy ( void )
   destroy_avl_tree ( t );
 }
 
-void avl_tree_insert_element ( void )
+void avl_tree_insert_elements ( void )
 {
   IntBucket p;
   p.p = 9;
@@ -45,6 +45,6 @@ void do_tests ( void )
   TEST ( sanity_check_zero );
   TEST ( avl_bucket_int_compare );
   TEST ( avl_tree_init_destroy );
-  TEST ( avl_tree_insert_element );
+  TEST ( avl_tree_insert_elements );
 }
 
