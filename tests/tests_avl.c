@@ -7,13 +7,16 @@ void sanity_check_zero ( void )
   ASSERT ( 0 == 0, "Zero failed to be equal to zero." );
 }
 
-void init_avl_tree ( void )
+void avl_tree_init_destroy ( void )
 {
+  AVLTree * t = init_avl_tree(sizeof(int*));
+  ASSERT ( t, "init_avl_tree returned null" );
+  destroy_avl_tree(t);
 }
 
 void do_tests ( void )
 {
   TEST ( sanity_check_zero );
-  TEST ( init_avl_tree );
+  TEST ( avl_tree_init_destroy );
 }
 
