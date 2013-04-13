@@ -42,8 +42,8 @@ void avl_tree_insert_elements ( void )
   avl_tree_insert ( t, a );
   avl_tree_insert ( t, b );
 
-  ASSERT ( t->root->bucket->p == 99, "Wrong value for root" );
-  ASSERT ( t->root->left->bucket->p == 8, "Wrong value for left child" );
+  ASSERT ( ((IntBucket*)(t->root->bucket))->p == 99, "Wrong value for root" );
+  ASSERT ( ((IntBucket*)(t->root->left->bucket))->p == 8, "Wrong value for left child" );
 
   destroy_avl_tree(t);
 
@@ -51,10 +51,22 @@ void avl_tree_insert_elements ( void )
   free(a);
 }
 
+void btnode_initialize_destroy ( void )
+{
+  BTNode * b = init_btnode(sizeof(IntBucket));
+
+  ASSERT ( b->left == NULL, "left is not null" );
+  ASSERT ( b->right == NULL, "right is not null" );
+  ASSERT ( b->bucket != NULL, "bucket is null!" );
+
+  destroy_btnode(b);
+}
+
 void do_tests ( void )
 {
   TEST ( sanity_check_zero );
   TEST ( avl_bucket_int_compare );
+  TEST ( btnode_initialize_destroy );
   TEST ( avl_tree_init_destroy );
   TEST ( avl_tree_insert_elements );
 }
