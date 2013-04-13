@@ -15,7 +15,6 @@ src/.deps/
 src/.libs/
 src/Makefile
 src/Makefile.in
-src/avl.c
 src/avl.lo
 src/avl.o
 src/ds
