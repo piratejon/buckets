@@ -16,9 +16,16 @@ void avl_tree_init_destroy ( void )
 
 void avl_tree_insert_element ( void )
 {
-  AVLTree * t = init_avl_tree(sizeof(int));
+  typedef struct _tag_int_bucket {
+    int p;
+  } Bucket;
 
-  avl_tree_insert ( t, 9 );
+  Bucket p;
+  p.p = 9;
+
+  AVLTree * t = init_avl_tree(sizeof(Bucket));
+
+  avl_tree_insert ( t, &p );
 
   destroy_avl_tree(t);
 }
