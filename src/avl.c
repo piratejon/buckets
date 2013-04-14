@@ -181,6 +181,7 @@ void destroy_btnode(BTNode * b) {
 _Bool avl_verify_consistency(BTNode * s) {
   if (s->parent) {
     if (s->parent->right != s && s->parent->left != s) {
+      fprintf(stderr, "node %d's parent does not have it as a child\n", ((IntBucket*)s->bucket)->p);
       return false;
     }
   }
