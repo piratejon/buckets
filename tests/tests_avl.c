@@ -33,11 +33,13 @@ void avl_tree_insert_elements ( void )
   IntBucket *a,*b,*c,*d,*e,*f,*g,*h;
   a = malloc(sizeof(IntBucket));
   b = malloc(sizeof(IntBucket));
+  c = malloc(sizeof(IntBucket));
 
   AVLTree * t = init_avl_tree(sizeof(IntBucket), &bucket_int_compare);
 
   a->p = 99;
   b->p = 8;
+  c->p = 7;
 
   avl_tree_insert ( t, a );
   ASSERT (t->root->count == 1, "Wrong count of children.");
@@ -54,8 +56,17 @@ void avl_tree_insert_elements ( void )
   ASSERT ( ((IntBucket*)(t->root->bucket))->p == 99, "Wrong value for root" );
   ASSERT ( ((IntBucket*)(t->root->left->bucket))->p == 8, "Wrong value for left child" );
 
+  avl_tree_insert(t,c); // ROOT->LEFT->LEFT
+  ASSERT(t->root->count==3, "Wrong count of children at root after 2nd insert");
+  ASSERT(t->root->height==3, "Wrong height after 2nd insert");
+  ASSERT(t->root->balance_factor==-2, "Wrong balance factor after 2nd insert");
+  ASSERT(t->root->left->count==2, "Wrong child count after 2nd insert");
+  ASSERT(t->root->left->height==2, "Wrong child height after 2nd insert");
+  ASSERT(t->root->left->balance_factor==-1, "Wrong child balance factor after 2nd insert");
+
   destroy_avl_tree(t);
 
+  free(c);
   free(b);
   free(a);
 }

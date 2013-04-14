@@ -19,12 +19,18 @@ void destroy_avl_tree ( AVLTree * t ) {
   free(t);
 }
 
+int avl_tree_new_balance_factor ( BTNode * sub_root ) {
+  return (sub_root->right ? sub_root->right->height : 0) - (sub_root->left ? sub_root->left->height : 0);
+}
+
 _Bool avl_tree_insert_at_node ( AVLTree * t, BTNode * sub_root, void * p ) {
   /**
     returns true if the height changed, false if not
     **/
   int cmp = (*(t->cmp))(sub_root->bucket, p);
-  if (cmp > 0) {
+  if (cmp < 0) {
+    return false;
+  } else if (cmp > 0) {
     sub_root->count ++;
     if (!sub_root->left) {
       sub_root->left = init_btnode(t->bucket_size);
@@ -37,7 +43,18 @@ _Bool avl_tree_insert_at_node ( AVLTree * t, BTNode * sub_root, void * p ) {
         sub_root->height ++;
         return true;
       }
+    } else {
+      if (avl_tree_insert_at_node(t, sub_root->left, p)) {
+        sub_root->height = sub_root->left->height + 1;
+        sub_root->balance_factor = avl_tree_new_balance_factor(sub_root);
+        return true;
+      } else {
+        return false;
+      }
     }
+  } else {
+    sub_root->multiplicity ++;
+    return false;
   }
 }
 
