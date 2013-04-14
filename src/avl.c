@@ -118,7 +118,7 @@ void rotate_right(BTNode * s) {
 
   l->left = s->left; if (l->left) l->left->parent = l;
   s->left = s->right;
-  s->right = l->right; if (l->right) l->right->parent = l;
+  s->right = l->right; if (s->right) s->right->parent = s;
   l->right = s;
 
   t = s->bucket;
@@ -137,9 +137,15 @@ void avl_tree_insert ( AVLTree * t, void * p ) {
       if (parent->left->balance_factor < 0) { // Left-right
         rotate_left(parent->left->right);
         bst_update_heights_bubble_upward(parent->left->left);
+        if (!avl_verify_consistency(t->root)) {
+          fprintf(stderr, "left-heavy rotate left: Oh Shit!\n");
+        }
       }
       rotate_right(parent->left); // happens in both LL and Lr cases
       bst_update_heights_bubble_upward(parent->right);
+      if (!avl_verify_consistency(t->root)) {
+        fprintf(stderr, "left-heavy rotate right: Oh Shit!\n");
+      }
     } else if (parent->balance_factor < -1) { // Right-left or Right-right
       if (parent->right->balance_factor > 0) { // Right-left
         rotate_right(parent->right->left);
