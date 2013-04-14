@@ -132,61 +132,59 @@ void avl_tree_bst_helpers ( void )
   ASSERT(t->root->left->left == NULL, "Left not NULL.");
   ASSERT(t->root->left->right == NULL, "Right not NULL.");
 
-  /*
   bst_insert(t,c);
   ASSERT(t->root->count == 3, "Wrong count.");
-  ASSERT(t->root->height == 1, "Wrong height.");
+  ASSERT(t->root->height == 3, "Wrong height.");
   ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
-  ASSERT(t->root->balance_factor = 0, "Wrong balance factor.");
+  ASSERT(t->root->balance_factor = 2, "Wrong balance factor.");
 
   bst_insert(t,d);
   ASSERT(t->root->count == 4, "Wrong count.");
-  ASSERT(t->root->height == 1, "Wrong height.");
+  ASSERT(t->root->height == 4, "Wrong height.");
   ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
-  ASSERT(t->root->balance_factor = 0, "Wrong balance factor.");
+  ASSERT(t->root->balance_factor = 3, "Wrong balance factor.");
 
   bst_insert(t,e);
   ASSERT(t->root->count == 5, "Wrong count.");
-  ASSERT(t->root->height == 1, "Wrong height.");
+  ASSERT(t->root->height == 4, "Wrong height.");
   ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
-  ASSERT(t->root->balance_factor = 0, "Wrong balance factor.");
+  ASSERT(t->root->balance_factor = 3, "Wrong balance factor.");
 
   bst_insert(t,f);
   ASSERT(t->root->count == 6, "Wrong count.");
-  ASSERT(t->root->height == 1, "Wrong height.");
+  ASSERT(t->root->height == 5, "Wrong height.");
   ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
-  ASSERT(t->root->balance_factor = 0, "Wrong balance factor.");
+  ASSERT(t->root->balance_factor = 4, "Wrong balance factor.");
 
   bst_insert(t,g);
   ASSERT(t->root->count == 7, "Wrong count.");
-  ASSERT(t->root->height == 1, "Wrong height.");
+  ASSERT(t->root->height == 6, "Wrong height.");
   ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
-  ASSERT(t->root->balance_factor = 0, "Wrong balance factor.");
+  ASSERT(t->root->balance_factor = 5, "Wrong balance factor.");
 
   bst_insert(t,h);
   ASSERT(t->root->count == 8, "Wrong count.");
-  ASSERT(t->root->height == 1, "Wrong height.");
+  ASSERT(t->root->height == 6, "Wrong height.");
   ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
-  ASSERT(t->root->balance_factor = 0, "Wrong balance factor.");
+  ASSERT(t->root->balance_factor = 4, "Wrong balance factor.");
 
   bst_insert(t,i);
   ASSERT(t->root->count == 9, "Wrong count.");
-  ASSERT(t->root->height == 1, "Wrong height.");
+  ASSERT(t->root->height == 6, "Wrong height.");
   ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
-  ASSERT(t->root->balance_factor = 0, "Wrong balance factor.");
+  ASSERT(t->root->balance_factor = 3, "Wrong balance factor.");
 
   bst_insert(t,j);
   ASSERT(t->root->count == 10, "Wrong count.");
-  ASSERT(t->root->height == 1, "Wrong height.");
+  ASSERT(t->root->height == 6, "Wrong height.");
   ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
-  ASSERT(t->root->balance_factor = 0, "Wrong balance factor.");
+  ASSERT(t->root->balance_factor = 3, "Wrong balance factor.");
 
   bst_insert(t,k);
   ASSERT(t->root->count == 11, "Wrong count.");
-  ASSERT(t->root->height == 1, "Wrong height.");
+  ASSERT(t->root->height == 6, "Wrong height.");
   ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
-  ASSERT(t->root->balance_factor = 0, "Wrong balance factor.");
-  */
+  ASSERT(t->root->balance_factor = 3, "Wrong balance factor.");
 
   free(k);
   free(j);

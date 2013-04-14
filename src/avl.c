@@ -24,7 +24,7 @@ int avl_tree_new_balance_factor ( BTNode * sub_root ) {
 }
 
 int avl_tree_new_height ( BTNode * sub_root ) {
-  return MAX2(sub_root->right ? sub_root->right->height : 0, sub_root->left ? sub_root->left->height : 0) + sub_root->height;
+  return MAX2(sub_root->right ? sub_root->right->height : 0, sub_root->left ? sub_root->left->height : 0) + 1;
 }
 
 void rotate_to_the_left(BTNode * sub_root) {
@@ -62,6 +62,15 @@ BTNode * bst_insert ( AVLTree * t, void * p ) {
       int cmp = (*(t->cmp))(sub_root->bucket, p);
       sub_root->count += 1;
       if (cmp < 0) {
+        if (sub_root->right) sub_root = sub_root->right;
+        else {
+          sub_root->right = init_btnode(t->bucket_size);
+          sub_root->right->parent = sub_root;
+          memcpy(sub_root->right->bucket, p, t->bucket_size);
+          if (NULL == sub_root->left) height_changed = true;
+          sub_root = sub_root->right;
+          break;
+        }
       } else if (cmp > 0) {
         if (sub_root->left) sub_root = sub_root->left;
         else {
