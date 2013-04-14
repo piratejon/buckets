@@ -24,7 +24,7 @@ _Bool avl_tree_insert_at_node ( AVLTree * t, BTNode * sub_root, void * p ) {
     returns true if the height changed, false if not
     **/
   int cmp = (*(t->cmp))(sub_root->bucket, p);
-  // if (cmp < 0) {
+  if (cmp > 0) {
     sub_root->count ++;
     // if (!sub_root->left) {
       sub_root->left = init_btnode(t->bucket_size);
@@ -38,7 +38,7 @@ _Bool avl_tree_insert_at_node ( AVLTree * t, BTNode * sub_root, void * p ) {
         return true;
       }
    // }
-  // }
+  }
 }
 
 void avl_tree_insert ( AVLTree * t, void * p ) {
