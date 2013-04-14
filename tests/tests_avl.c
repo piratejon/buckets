@@ -301,6 +301,11 @@ void avl_tree_insert_many ( void )
   ASSERT( ((IntBucket*)t->root->right->left->right->bucket )->p == 28474, "Wrong");
   ASSERT( ((IntBucket*)t->root->right->right->bucket )->p == 30272, "Wrong");
 
+  avl_tree_insert(t, ib+i);
+
+
+  ASSERT(avl_verify_consistency(t->root) == true, "Inconsistent after insert 14");
+
   destroy_avl_tree(t);
 }
 
