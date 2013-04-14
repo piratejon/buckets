@@ -50,15 +50,25 @@ _Bool avl_tree_correct_left_imbalance ( AVLTree * t, BTNode * sub_root ) {
   return rotate_to_the_right(sub_root);
 }
 
+void bst_update_heights(BTNode * sub_root) {
+  // O(lg n) height and balance factor correction
+  BTNode * parent = sub_root->parent;
+  while (parent) {
+    parent->height = avl_tree_new_height(parent);
+    parent->balance_factor = avl_tree_new_balance_factor(parent);
+    parent = parent->parent;
+  }
+}
+
 BTNode * bst_insert ( AVLTree * t, void * p ) {
   // this is a normal BST insert
   _Bool height_changed = false;
   BTNode * sub_root = t->root;
   if (!sub_root) {
-    t->root = init_btnode(t->bucket_size);
+    sub_root = t->root = init_btnode(t->bucket_size);
     memcpy(t->root->bucket, p, t->bucket_size);
   } else {
-    while (1) {
+    while (1) { // O(lg n) insertion
       int cmp = (*(t->cmp))(sub_root->bucket, p);
       sub_root->count += 1;
       if (cmp < 0) {
@@ -88,26 +98,77 @@ BTNode * bst_insert ( AVLTree * t, void * p ) {
     }
   }
 
-  if (height_changed) {
-    BTNode * parent = sub_root->parent;
-    while (parent) {
-      parent->height = avl_tree_new_height(parent);
-      parent->balance_factor = avl_tree_new_balance_factor(parent);
-      parent = parent->parent;
-    }
+  if (height_changed) { 
+    bst_update_heights(sub_root); // O(lg n)
   }
 
   return sub_root;
 }
 
+void rotate_left(BTNode * s) {
+  void * t;
+  BTNode * a, * b, * c, * l;
+
+  l = s->parent;
+
+  a = l->left;
+  b = s->left;
+  c = s->right;
+
+  l->left = s; s->parent = l;
+  l->right = c; if (c) c->parent = l;
+  s->right = b; if (b) b->parent = s;
+  s->left = a; if (a) a->parent = s;
+
+  t = s->bucket;
+  s->bucket = l->bucket;
+  l->bucket = t;
+}
+
+void rotate_right(BTNode * s) {
+  void * t;
+  BTNode * b, * c, * d, * l;
+
+  l = s->parent;
+
+  c = s->right;
+  d = l->right;
+
+  l->left = s->left; if (s->left) s->left->parent = l;
+  l->right = s;
+  s->left = s->right;
+  s->right = l->right; if (l->right) l->right->parent = s;
+
+  t = s->bucket;
+  s->bucket = l->bucket;
+  l->bucket = t;
+}
+
 void avl_tree_insert ( AVLTree * t, void * p ) {
-  if ( !t->root ) {
-    t->root = init_btnode(t->bucket_size);
-    memcpy(t->root->bucket, p, t->bucket_size);
-  } else {
-    // avl_tree_insert_at_node(t, t->root, p);
+  BTNode * new_node, * parent;
+
+  new_node = bst_insert(t, p);
+  parent = new_node->parent;
+
+  while (parent) { // O(lg n) AVL invariant inspection
+    if (parent->balance_factor > 1) { // Left-left or Left-right
+      if (parent->left->balance_factor < 0) { // Left-right
+        rotate_left(parent->left->right);
+        bst_update_heights(parent->left);
+      }
+      rotate_right(parent); // happens in both LL and Lr cases
+      bst_update_heights(parent);
+    } else if (parent->balance_factor < -1) { // Right-left or Right-right
+      if (parent->right->balance_factor > 0) {
+        rotate_right(parent->right);
+        bst_update_heights(parent->right);
+      }
+      rotate_left(parent);
+      bst_update_heights(parent);
+    } else {
+      break;
+    }
   }
-  return;
 }
 
 int bucket_int_compare ( IntBucket * a, IntBucket * b) {

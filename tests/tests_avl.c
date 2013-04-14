@@ -48,7 +48,7 @@ void avl_tree_insert_elements ( void )
   avl_tree_insert ( t, b );
   ASSERT (t->root->count == 2, "Wrong count of children in root after inserting one child.");
   ASSERT (t->root->height == 2, "Wrong height for root with one child.");
-  ASSERT (t->root->balance_factor == -1, "Root with one child has wrong balance factor.");
+  ASSERT (t->root->balance_factor == 1, "Root with one child has wrong balance factor.");
   ASSERT (t->root->left->count == 1, "Child has wrong count.");
   ASSERT (t->root->left->height == 1, "Child has wrong height.");
   ASSERT (t->root->left->balance_factor == 0, "Root with no children has wrong balance factor.");
@@ -59,10 +59,10 @@ void avl_tree_insert_elements ( void )
   avl_tree_insert(t,c); // ROOT->LEFT->LEFT
   ASSERT(t->root->count==3, "Wrong count of children at root after 2nd insert");
   ASSERT(t->root->height==3, "Wrong height after 2nd insert");
-  ASSERT(t->root->balance_factor==-2, "Wrong balance factor after 2nd insert");
+  ASSERT(t->root->balance_factor==2, "Wrong balance factor after 2nd insert");
   ASSERT(t->root->left->count==2, "Wrong child count after 2nd insert");
   ASSERT(t->root->left->height==2, "Wrong child height after 2nd insert");
-  ASSERT(t->root->left->balance_factor==-1, "Wrong child balance factor after 2nd insert");
+  ASSERT(t->root->left->balance_factor==1, "Wrong child balance factor after 2nd insert");
 
   destroy_avl_tree(t);
 
@@ -208,6 +208,6 @@ void do_tests ( void )
   TEST ( btnode_initialize_destroy );
   TEST ( avl_tree_init_destroy );
   TEST ( avl_tree_bst_helpers );
-  // TEST ( avl_tree_insert_elements );
+  TEST ( avl_tree_insert_elements );
 }
 
