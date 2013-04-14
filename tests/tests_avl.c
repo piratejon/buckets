@@ -237,7 +237,7 @@ void avl_tree_insert_many ( void )
 {
   AVLTree * t = init_avl_tree(sizeof(IntBucket), &bucket_int_compare);
 
-  int insert_qty = 60;
+  int insert_qty = 13;
 
   IntBucket ib[] = {
     {30272}, {16274}, {11768}, {10231}, {28474}, { 7272}, {15032}, {13196}, {29825}, { 6840},
@@ -283,6 +283,23 @@ void avl_tree_insert_many ( void )
     fprintf(stderr, "%d: %d\n", i, ib[i].p);
     ASSERT(avl_verify_consistency(t->root)==true, "Tree inconsistent after inserting");
   }
+
+  ASSERT(t->root->height == 5, "Wrong height after 13 inserts");
+  ASSERT(t->root->balance_factor = 1, "Wrong balance factor after 13 inserts");
+  ASSERT(t->root->count == 13, "Wrong count after 13 inserts");
+  ASSERT( ((IntBucket*)t->root->left->bucket )->p == 10231, "Wrong");
+  ASSERT( ((IntBucket*)t->root->left->left->bucket )->p == 7272, "Wrong");
+  ASSERT( ((IntBucket*)t->root->left->left->left->bucket )->p == 6840, "Wrong");
+  ASSERT( ((IntBucket*)t->root->left->right->bucket )->p == 13196, "Wrong");
+  ASSERT( ((IntBucket*)t->root->left->right->left->bucket )->p == 11768, "Wrong");
+  ASSERT( ((IntBucket*)t->root->left->right->right->bucket )->p == 15032, "Wrong");
+  ASSERT( ((IntBucket*)t->root->left->right->right->left->bucket )->p == 13786, "Wrong");
+
+  ASSERT( ((IntBucket*)t->root->right->bucket )->p == 29825, "Wrong");
+  ASSERT( ((IntBucket*)t->root->right->left->bucket )->p == 18793, "Wrong");
+  ASSERT( ((IntBucket*)t->root->right->left->left->bucket )->p == 18444, "Wrong");
+  ASSERT( ((IntBucket*)t->root->right->left->right->bucket )->p == 28474, "Wrong");
+  ASSERT( ((IntBucket*)t->root->right->right->bucket )->p == 30272, "Wrong");
 
   destroy_avl_tree(t);
 }
