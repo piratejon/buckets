@@ -2,9 +2,15 @@
 
 #include <sys/types.h>
 
+#define MAX2(x,y) (((x)>(y))?(x):(y))
+
 typedef struct _tag_btnode {
   void * bucket;
   struct _tag_btnode * left, * right;
+  int count;
+  int balance_factor;
+  int multiplicity;
+  int height;
 } BTNode;
 
 typedef struct _tag_avltree {

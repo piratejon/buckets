@@ -1,5 +1,6 @@
 
 #include <sys/types.h>
+#include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -18,25 +19,26 @@ void destroy_avl_tree ( AVLTree * t ) {
   free(t);
 }
 
-void avl_tree_insert_at_node ( AVLTree * t, BTNode * b, void * p ) {
-  int cmp = (*(t->cmp))(p, b->bucket);
-  if (cmp > 0) {
-    if (b->right) {
-      avl_tree_insert_at_node(t, b->right, p);
-    } else {
-      b->right = init_btnode(t->bucket_size);
-      memcpy(b->right->bucket, p, t->bucket_size);
-    }
-  } else if (cmp < 0) {
-    if (b->left) {
-      avl_tree_insert_at_node(t, b->left, p);
-    } else {
-      b->left = init_btnode(t->bucket_size);
-      memcpy(b->left->bucket, p, t->bucket_size);
-    }
-  } else {
-    // lol
-  }
+_Bool avl_tree_insert_at_node ( AVLTree * t, BTNode * sub_root, void * p ) {
+  /**
+    returns true if the height changed, false if not
+    **/
+  int cmp = (*(t->cmp))(sub_root->bucket, p);
+  // if (cmp < 0) {
+    sub_root->count ++;
+    // if (!sub_root->left) {
+      sub_root->left = init_btnode(t->bucket_size);
+      memcpy(sub_root->left->bucket, p, t->bucket_size);
+      if (sub_root->right) {
+        sub_root->balance_factor = sub_root->right->height - 1;
+        return false;
+      } else {
+        sub_root->balance_factor = -1;
+        sub_root->height ++;
+        return true;
+      }
+   // }
+  // }
 }
 
 void avl_tree_insert ( AVLTree * t, void * p ) {
@@ -49,8 +51,7 @@ void avl_tree_insert ( AVLTree * t, void * p ) {
   return;
 }
 
-int bucket_int_compare ( IntBucket * a, IntBucket * b)
-{
+int bucket_int_compare ( IntBucket * a, IntBucket * b) {
   if ( a->p > b->p ) return 1;
   else if ( a->p < b->p ) return -1;
   else return 0;
@@ -61,6 +62,10 @@ BTNode * init_btnode(size_t s) {
   out->bucket = malloc(s);
   out->left = NULL;
   out->right = NULL;
+  out->count = 1;
+  out->height = 1;
+  out->multiplicity = 1;
+  out->balance_factor = 0;
   return out;
 }
 

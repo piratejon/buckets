@@ -41,11 +41,14 @@ void avl_tree_insert_elements ( void )
 
   avl_tree_insert ( t, a );
   ASSERT (t->root->count == 1, "Wrong count of children.");
+  ASSERT (t->root->height == 1, "Root with no children has wrong height.");
   ASSERT (t->root->balance_factor == 0, "Root with no children has wrong balance factor.");
   avl_tree_insert ( t, b );
   ASSERT (t->root->count == 2, "Wrong count of children in root after inserting one child.");
-  ASSERT (t->root->balance_factor == 1, "Root with no children has wrong balance factor.");
+  ASSERT (t->root->height == 2, "Wrong height for root with one child.");
+  ASSERT (t->root->balance_factor == -1, "Root with one child has wrong balance factor.");
   ASSERT (t->root->left->count == 1, "Child has wrong count.");
+  ASSERT (t->root->left->height == 1, "Child has wrong height.");
   ASSERT (t->root->left->balance_factor == 0, "Root with no children has wrong balance factor.");
 
   ASSERT ( ((IntBucket*)(t->root->bucket))->p == 99, "Wrong value for root" );
