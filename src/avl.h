@@ -30,6 +30,7 @@ int bucket_int_compare ( IntBucket *, IntBucket * );
 BTNode * init_btnode(size_t);
 void destroy_btnode(BTNode *);
 BTNode * bst_insert ( AVLTree * t, void * p );
+_Bool avl_verify_consistency(BTNode * s);
 
 #endif // _JS_AVL_H
 

@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "avl.h"
 
@@ -175,5 +176,37 @@ void destroy_btnode(BTNode * b) {
   if (b->left) destroy_btnode(b->left);
   if (b->right) destroy_btnode(b->right);
   free(b);
+}
+
+_Bool avl_verify_consistency(BTNode * s) {
+  if (s->parent) {
+    if (s->parent->right != s && s->parent->left != s) {
+      return false;
+    }
+  }
+
+  if (s->left) {
+    if (s->left->parent != s) {
+      fprintf(stderr, "node %d has wrong parent\n", ((IntBucket*)s->bucket)->p);
+      return false;
+    }
+    if (!avl_verify_consistency(s->left)) {
+      fprintf(stderr, "left child inconsistent\n");
+      return false;
+    }
+  }
+
+  if (s->right) {
+    if (s->right->parent != s) {
+      fprintf(stderr, "node %d has wrong parent\n", ((IntBucket*)s->bucket)->p);
+      return false;
+    }
+    if (!avl_verify_consistency(s->right)) {
+      fprintf(stderr, "right child inconsistent\n");
+      return false;
+    }
+  }
+
+  return true;
 }
 

@@ -1,4 +1,6 @@
 
+#include <stdbool.h>
+
 #include "avl.h"
 #include "tests.h"
 
@@ -235,7 +237,7 @@ void avl_tree_insert_many ( void )
 {
   AVLTree * t = init_avl_tree(sizeof(IntBucket), &bucket_int_compare);
 
-  int insert_qty = 65;
+  int insert_qty = 60;
 
   IntBucket ib[] = {
     {30272}, {16274}, {11768}, {10231}, {28474}, { 7272}, {15032}, {13196}, {29825}, { 6840},
@@ -252,11 +254,35 @@ void avl_tree_insert_many ( void )
 
   int i;
 
+  /*
+  avl_tree_insert(t, ib+0);
+  ASSERT( ((IntBucket*)t->root->bucket)->p == 30272, "Wrong value in root after first insert");
+  ASSERT(t->root->count == 1, "Wrong count after first insert");
+  ASSERT(t->root->height == 1, "Wrong height after first insert");
+  ASSERT(t->root->balance_factor == 0, "Wrong balance factor after first insert");
+  ASSERT(t->root->multiplicity == 1, "Wrong multiplicity after first insert");
+  ASSERT(t->root->left == NULL, "Left not NULL after first insert");
+  ASSERT(t->root->right == NULL, "Right not NULL after first insert");
+  ASSERT(t->root->parent == NULL, "Root node parent not NULL");
+  ASSERT(avl_verify_consistency(t->root)==true, "Tree inconsistent after inserting");
+
+  avl_tree_insert(t, ib+1);
+  ASSERT( ((IntBucket*)t->root->bucket)->p == 30272, "Wrong value in root after second insert");
+  ASSERT( ((IntBucket*)t->root->left->bucket)->p == 16274, "Wrong value in root after second insert");
+  ASSERT(t->root->count == 2, "Wrong count after second insert");
+  ASSERT(t->root->height == 2, "Wrong height after second insert");
+  ASSERT(t->root->balance_factor == 1, "Wrong balance factor after second insert");
+  ASSERT(t->root->left != NULL, "no left child after second insert");
+  ASSERT(t->root->right == NULL, "right child exists after second insert");
+  ASSERT(t->root->left->parent == t->root, "Left child has wrong parent after second insert");
+  ASSERT(avl_verify_consistency(t->root)==true, "Tree inconsistent after inserting");
+  */
+
   for (i = 0; i < insert_qty; i += 1) {
     avl_tree_insert(t, &(ib[i]));
+    fprintf(stderr, "%d: %d\n", i, ib[i].p);
+    ASSERT(avl_verify_consistency(t->root)==true, "Tree inconsistent after inserting");
   }
-
-  ASSERT(t->root->count == insert_qty, "crap");
 
   destroy_avl_tree(t);
 }
