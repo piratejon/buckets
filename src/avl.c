@@ -20,11 +20,11 @@ void destroy_avl_tree ( AVLTree * t ) {
 }
 
 int avl_tree_new_balance_factor ( BTNode * sub_root ) {
-  return (sub_root->right ? sub_root->right->height : 0) - (sub_root->left ? sub_root->left->height : 0);
+  return (sub_root->left ? sub_root->left->height : 0) - (sub_root->right ? sub_root->right->height : 0);
 }
 
 int avl_tree_new_height ( BTNode * sub_root ) {
-  return MAX2(sub_root->right ? sub_root->right->height : 0, sub_root->left ? sub_root->left->height : 0);
+  return MAX2(sub_root->right ? sub_root->right->height : 0, sub_root->left ? sub_root->left->height : 0) + sub_root->height;
 }
 
 void rotate_to_the_left(BTNode * sub_root) {
@@ -50,42 +50,45 @@ _Bool avl_tree_correct_left_imbalance ( AVLTree * t, BTNode * sub_root ) {
   return rotate_to_the_right(sub_root);
 }
 
-_Bool avl_tree_insert_at_node ( AVLTree * t, BTNode * sub_root, void * p ) {
-  /**
-    returns true if the height changed, false if not
-    **/
-  int cmp = (*(t->cmp))(sub_root->bucket, p);
-  if (cmp < 0) {
-    return false;
-  } else if (cmp > 0) {
-    sub_root->count ++;
-    if (!sub_root->left) {
-      sub_root->left = init_btnode(t->bucket_size);
-      memcpy(sub_root->left->bucket, p, t->bucket_size);
-      if (sub_root->right) {
-        sub_root->balance_factor = sub_root->right->height - 1;
-        return false;
-      } else {
-        sub_root->balance_factor = -1;
-        sub_root->height ++;
-        return true;
-      }
-    } else {
-      if (avl_tree_insert_at_node(t, sub_root->left, p)) {
-        int tmp_height = avl_tree_new_height(sub_root);
-        sub_root->balance_factor = avl_tree_new_balance_factor(sub_root);
-        if (sub_root->balance_factor == -2) {
-          avl_tree_correct_left_imbalance(t, sub_root);
+BTNode * bst_insert ( AVLTree * t, void * p ) {
+  // this is a normal BST insert
+  _Bool height_changed = false;
+  BTNode * sub_root = t->root;
+  if (!sub_root) {
+    t->root = init_btnode(t->bucket_size);
+    memcpy(t->root->bucket, p, t->bucket_size);
+  } else {
+    while (1) {
+      int cmp = (*(t->cmp))(sub_root->bucket, p);
+      sub_root->count += 1;
+      if (cmp < 0) {
+      } else if (cmp > 0) {
+        if (sub_root->left) sub_root = sub_root->left;
+        else {
+          sub_root->left = init_btnode(t->bucket_size);
+          sub_root->left->parent = sub_root;
+          memcpy(sub_root->left->bucket, p, t->bucket_size);
+          if (NULL == sub_root->right) height_changed = true;
+          sub_root = sub_root->left;
+          break;
         }
-        return true;
       } else {
-        return false;
+        sub_root->multiplicity += 1;
+        break;
       }
     }
-  } else {
-    sub_root->multiplicity ++;
-    return false;
   }
+
+  if (height_changed) {
+    BTNode * parent = sub_root->parent;
+    while (parent) {
+      parent->height = avl_tree_new_height(parent);
+      parent->balance_factor = avl_tree_new_balance_factor(parent);
+      parent = parent->parent;
+    }
+  }
+
+  return sub_root;
 }
 
 void avl_tree_insert ( AVLTree * t, void * p ) {
@@ -93,7 +96,7 @@ void avl_tree_insert ( AVLTree * t, void * p ) {
     t->root = init_btnode(t->bucket_size);
     memcpy(t->root->bucket, p, t->bucket_size);
   } else {
-    avl_tree_insert_at_node(t, t->root, p);
+    // avl_tree_insert_at_node(t, t->root, p);
   }
   return;
 }
@@ -109,6 +112,7 @@ BTNode * init_btnode(size_t s) {
   out->bucket = malloc(s);
   out->left = NULL;
   out->right = NULL;
+  out->parent = NULL;
   out->count = 1;
   out->height = 1;
   out->multiplicity = 1;

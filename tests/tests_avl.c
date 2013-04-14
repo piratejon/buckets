@@ -82,12 +82,134 @@ void btnode_initialize_destroy ( void )
   destroy_btnode(b);
 }
 
+void avl_tree_bst_helpers ( void )
+{
+  AVLTree * t = init_avl_tree(sizeof(IntBucket), &bucket_int_compare);
+
+  IntBucket *a,*b,*c,*d,*e,*f,*g,*h,*i,*j,*k;
+
+  a = malloc(sizeof(IntBucket));
+  b = malloc(sizeof(IntBucket));
+  c = malloc(sizeof(IntBucket));
+  d = malloc(sizeof(IntBucket));
+  e = malloc(sizeof(IntBucket));
+  f = malloc(sizeof(IntBucket));
+  g = malloc(sizeof(IntBucket));
+  h = malloc(sizeof(IntBucket));
+  i = malloc(sizeof(IntBucket));
+  j = malloc(sizeof(IntBucket));
+  k = malloc(sizeof(IntBucket));
+
+  a->p = 99;
+  b->p = 8;
+  c->p = 33;
+  d->p = 17;
+  e->p = 86;
+  f->p = 87;
+  g->p = 93;
+  h->p = 17;
+  i->p = 150;
+  j->p = 155;
+  k->p = 140;
+
+  bst_insert(t,a);
+  ASSERT(t->root->count == 1, "Wrong count.");
+  ASSERT(t->root->height == 1, "Wrong height.");
+  ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
+  ASSERT(t->root->balance_factor == 0, "Wrong balance factor.");
+  ASSERT(t->root->left == NULL, "Left not NULL");
+  ASSERT(t->root->right == NULL, "Right not NULL");
+
+  bst_insert(t,b);
+  ASSERT(t->root->count == 2, "Wrong count.");
+  ASSERT(t->root->height == 2, "Wrong height.");
+  ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
+  ASSERT(t->root->balance_factor == 1, "Wrong balance factor.");
+  ASSERT(t->root->right == NULL, "Right not NULL");
+  ASSERT(t->root->left != NULL, "Left NULL");
+  ASSERT(t->root->left->count == 1, "Wrong count.");
+  ASSERT(t->root->left->height == 1, "Wrong height.");
+  ASSERT(t->root->left->left == NULL, "Left not NULL.");
+  ASSERT(t->root->left->right == NULL, "Right not NULL.");
+
+  /*
+  bst_insert(t,c);
+  ASSERT(t->root->count == 3, "Wrong count.");
+  ASSERT(t->root->height == 1, "Wrong height.");
+  ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
+  ASSERT(t->root->balance_factor = 0, "Wrong balance factor.");
+
+  bst_insert(t,d);
+  ASSERT(t->root->count == 4, "Wrong count.");
+  ASSERT(t->root->height == 1, "Wrong height.");
+  ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
+  ASSERT(t->root->balance_factor = 0, "Wrong balance factor.");
+
+  bst_insert(t,e);
+  ASSERT(t->root->count == 5, "Wrong count.");
+  ASSERT(t->root->height == 1, "Wrong height.");
+  ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
+  ASSERT(t->root->balance_factor = 0, "Wrong balance factor.");
+
+  bst_insert(t,f);
+  ASSERT(t->root->count == 6, "Wrong count.");
+  ASSERT(t->root->height == 1, "Wrong height.");
+  ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
+  ASSERT(t->root->balance_factor = 0, "Wrong balance factor.");
+
+  bst_insert(t,g);
+  ASSERT(t->root->count == 7, "Wrong count.");
+  ASSERT(t->root->height == 1, "Wrong height.");
+  ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
+  ASSERT(t->root->balance_factor = 0, "Wrong balance factor.");
+
+  bst_insert(t,h);
+  ASSERT(t->root->count == 8, "Wrong count.");
+  ASSERT(t->root->height == 1, "Wrong height.");
+  ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
+  ASSERT(t->root->balance_factor = 0, "Wrong balance factor.");
+
+  bst_insert(t,i);
+  ASSERT(t->root->count == 9, "Wrong count.");
+  ASSERT(t->root->height == 1, "Wrong height.");
+  ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
+  ASSERT(t->root->balance_factor = 0, "Wrong balance factor.");
+
+  bst_insert(t,j);
+  ASSERT(t->root->count == 10, "Wrong count.");
+  ASSERT(t->root->height == 1, "Wrong height.");
+  ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
+  ASSERT(t->root->balance_factor = 0, "Wrong balance factor.");
+
+  bst_insert(t,k);
+  ASSERT(t->root->count == 11, "Wrong count.");
+  ASSERT(t->root->height == 1, "Wrong height.");
+  ASSERT(t->root->multiplicity == 1, "Wrong multiplicity.");
+  ASSERT(t->root->balance_factor = 0, "Wrong balance factor.");
+  */
+
+  free(k);
+  free(j);
+  free(i);
+  free(h);
+  free(g);
+  free(f);
+  free(e);
+  free(d);
+  free(c);
+  free(b);
+  free(a);
+
+  destroy_avl_tree(t);
+}
+
 void do_tests ( void )
 {
   TEST ( sanity_check_zero );
   TEST ( avl_bucket_int_compare );
   TEST ( btnode_initialize_destroy );
   TEST ( avl_tree_init_destroy );
-  TEST ( avl_tree_insert_elements );
+  TEST ( avl_tree_bst_helpers );
+  // TEST ( avl_tree_insert_elements );
 }
 
