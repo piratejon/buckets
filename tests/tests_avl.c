@@ -34,12 +34,20 @@ void avl_tree_insert_elements ( void )
   a = malloc(sizeof(IntBucket));
   b = malloc(sizeof(IntBucket));
   c = malloc(sizeof(IntBucket));
+  d = malloc(sizeof(IntBucket));
+  e = malloc(sizeof(IntBucket));
+  f = malloc(sizeof(IntBucket));
+  g = malloc(sizeof(IntBucket));
 
   AVLTree * t = init_avl_tree(sizeof(IntBucket), &bucket_int_compare);
 
   a->p = 99;
   b->p = 8;
   c->p = 7;
+  d->p = 100;
+  e->p = 101;
+  f->p = 75;
+  g->p = 90;
 
   avl_tree_insert ( t, a );
   ASSERT (t->root->count == 1, "Wrong count of children.");
@@ -73,8 +81,21 @@ void avl_tree_insert_elements ( void )
   ASSERT(t->root->left->height==1, "Wrong child height after 2nd insert");
   ASSERT(t->root->left->balance_factor==0, "Wrong child balance factor after 2nd insert");
 
+  avl_tree_insert(t,d);
+  ASSERT(t->root->balance_factor == -1, "Wrong balance");
+  avl_tree_insert(t,e);
+  ASSERT(t->root->balance_factor == -1, "Wrong balance");
+  ASSERT(t->root->height == 3, "Wrong height");
+  avl_tree_insert(t,f);
+  avl_tree_insert(t,g);
+  ASSERT(t->root->count == 7, "wrong count");
+
   destroy_avl_tree(t);
 
+  free(g);
+  free(f);
+  free(e);
+  free(d);
   free(c);
   free(b);
   free(a);
@@ -210,6 +231,36 @@ void avl_tree_bst_helpers ( void )
   destroy_avl_tree(t);
 }
 
+void avl_tree_insert_many ( void )
+{
+  AVLTree * t = init_avl_tree(sizeof(IntBucket), &bucket_int_compare);
+
+  int insert_qty = 65;
+
+  IntBucket ib[] = {
+    {30272}, {16274}, {11768}, {10231}, {28474}, { 7272}, {15032}, {13196}, {29825}, { 6840},
+    {18444}, {18793}, {13786}, {21125}, {25311}, {23414}, {18374}, {24110}, {15465}, {26300},
+    { 1181}, { 6297}, { 3693}, {20957}, {22585}, { 8915}, {30371}, { 2036}, {18499}, {18391},
+    {15360}, {32509}, {23336}, {18848}, {25712}, { 6162}, { 1483}, { 4309}, {13482}, {14809},
+    { 5596}, {22524}, {13958}, {16918}, {25668}, {31621}, {30060}, {24637}, {28116}, {15994},
+    {30595}, {30642}, {30017}, { 7221}, { 2916}, { 7010}, {29356}, {22282}, {30649}, {17493},
+    {28780}, { 6725}, {26998}, {28805}, {24689}, {25547}, {17625}, {14250}, {11250}, {16195},
+    { 9542}, {26029}, { 2734}, {23373}, {21176}, {28102}, { 1894}, {  325}, { 9406}, { 4915},
+    { 8759}, {32413}, {14144}, { 5394}, { 3495}, {32030}, {23904}, { 4260}, {11579}, {11100},
+    {27212}, {20562}, {30264}, {30850}, {22393}, {28107}, {21299}, {25306}, { 2668}, { 3894},
+  };
+
+  int i;
+
+  for (i = 0; i < insert_qty; i += 1) {
+    avl_tree_insert(t, &(ib[i]));
+  }
+
+  ASSERT(t->root->count == insert_qty, "crap");
+
+  destroy_avl_tree(t);
+}
+
 void do_tests ( void )
 {
   TEST ( sanity_check_zero );
@@ -218,5 +269,6 @@ void do_tests ( void )
   TEST ( avl_tree_init_destroy );
   TEST ( avl_tree_bst_helpers );
   TEST ( avl_tree_insert_elements );
+  TEST ( avl_tree_insert_many );
 }
 

@@ -135,14 +135,17 @@ void avl_tree_insert ( AVLTree * t, void * p ) {
     if (parent->balance_factor > 1) { // Left-left or Left-right
       if (parent->left->balance_factor < 0) { // Left-right
         rotate_left(parent->left->right);
+        bst_update_heights_bubble_upward(parent->left->left);
       }
       rotate_right(parent->left); // happens in both LL and Lr cases
       bst_update_heights_bubble_upward(parent->right);
     } else if (parent->balance_factor < -1) { // Right-left or Right-right
-      if (parent->right->balance_factor > 0) {
-        rotate_right(parent->right);
+      if (parent->right->balance_factor > 0) { // Right-left
+        rotate_right(parent->right->left);
+        bst_update_heights_bubble_upward(parent->right->right);
       }
-      rotate_left(parent->right->left);
+      rotate_left(parent->right);
+      bst_update_heights_bubble_upward(parent->left);
     }
     parent = parent->parent;
   }
