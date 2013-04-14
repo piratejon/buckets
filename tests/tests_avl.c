@@ -45,24 +45,33 @@ void avl_tree_insert_elements ( void )
   ASSERT (t->root->count == 1, "Wrong count of children.");
   ASSERT (t->root->height == 1, "Root with no children has wrong height.");
   ASSERT (t->root->balance_factor == 0, "Root with no children has wrong balance factor.");
+
   avl_tree_insert ( t, b );
   ASSERT (t->root->count == 2, "Wrong count of children in root after inserting one child.");
   ASSERT (t->root->height == 2, "Wrong height for root with one child.");
   ASSERT (t->root->balance_factor == 1, "Root with one child has wrong balance factor.");
   ASSERT (t->root->left->count == 1, "Child has wrong count.");
   ASSERT (t->root->left->height == 1, "Child has wrong height.");
-  ASSERT (t->root->left->balance_factor == 0, "Root with no children has wrong balance factor.");
+  ASSERT (t->root->left->balance_factor == 0, "Node with no children has wrong balance factor.");
+  ASSERT (t->root->left->parent == t->root, "Left child has wrong parent after first insert.");
 
   ASSERT ( ((IntBucket*)(t->root->bucket))->p == 99, "Wrong value for root" );
   ASSERT ( ((IntBucket*)(t->root->left->bucket))->p == 8, "Wrong value for left child" );
 
-  avl_tree_insert(t,c); // ROOT->LEFT->LEFT
+  avl_tree_insert(t,c); // ROOT->LEFT->LEFT, should get balance
+  ASSERT ( ((IntBucket*)(t->root->bucket))->p == 8, "Wrong root after insert requiring rotate");
+  ASSERT ( ((IntBucket*)(t->root->right->bucket))->p == 99, "Wrong root after insert requiring rotate");
+  ASSERT ( ((IntBucket*)(t->root->left->bucket))->p == 7, "Wrong root after insert requiring rotate");
+
+  ASSERT (t->root->left->parent == t->root, "Left has wrong parent after rebalance.");
+  ASSERT (t->root->right->parent == t->root, "Right has wrong parent after rebalance.");
+
   ASSERT(t->root->count==3, "Wrong count of children at root after 2nd insert");
-  ASSERT(t->root->height==3, "Wrong height after 2nd insert");
-  ASSERT(t->root->balance_factor==2, "Wrong balance factor after 2nd insert");
-  ASSERT(t->root->left->count==2, "Wrong child count after 2nd insert");
-  ASSERT(t->root->left->height==2, "Wrong child height after 2nd insert");
-  ASSERT(t->root->left->balance_factor==1, "Wrong child balance factor after 2nd insert");
+  ASSERT(t->root->height==2, "Wrong height after 2nd insert");
+  ASSERT(t->root->balance_factor==0, "Wrong balance factor after 2nd insert");
+  ASSERT(t->root->left->count==1, "Wrong child count after 2nd insert");
+  ASSERT(t->root->left->height==1, "Wrong child height after 2nd insert");
+  ASSERT(t->root->left->balance_factor==0, "Wrong child balance factor after 2nd insert");
 
   destroy_avl_tree(t);
 

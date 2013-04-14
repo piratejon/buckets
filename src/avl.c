@@ -27,35 +27,16 @@ int avl_tree_new_height ( BTNode * sub_root ) {
   return MAX2(sub_root->right ? sub_root->right->height : 0, sub_root->left ? sub_root->left->height : 0) + 1;
 }
 
-void rotate_to_the_left(BTNode * sub_root) {
+void bst_update_height_no_bubble(BTNode * sub_root) {
+  sub_root->height = avl_tree_new_height(sub_root);
+  sub_root->balance_factor = avl_tree_new_balance_factor(sub_root);
 }
 
-_Bool rotate_to_the_right(BTNode * sub_root) {
-  /**
-    returns true if the height changed, false if not
-    **/
-  void * old_subroot_bucket = sub_root->bucket;
-  BTNode * left = sub_root->left;
-  sub_root->bucket = left->bucket;
-}
-
-_Bool avl_tree_correct_left_imbalance ( AVLTree * t, BTNode * sub_root ) {
-  // this is a left imbalance. is it left-left or left-right?
-  if (sub_root->balance_factor > 0) { // left-right
-    //  rotate sub_root->left->right to the left, then rotate
-  } else {
-    // left-left
-  }
-  // rotate sub_root->left to the right
-  return rotate_to_the_right(sub_root);
-}
-
-void bst_update_heights(BTNode * sub_root) {
+void bst_update_heights_bubble_upward(BTNode * sub_root) {
   // O(lg n) height and balance factor correction
-  BTNode * parent = sub_root->parent;
+  BTNode * parent = sub_root;
   while (parent) {
-    parent->height = avl_tree_new_height(parent);
-    parent->balance_factor = avl_tree_new_balance_factor(parent);
+    bst_update_height_no_bubble(parent);
     parent = parent->parent;
   }
 }
@@ -99,7 +80,7 @@ BTNode * bst_insert ( AVLTree * t, void * p ) {
   }
 
   if (height_changed) { 
-    bst_update_heights(sub_root); // O(lg n)
+    bst_update_heights_bubble_upward(sub_root); // O(lg n)
   }
 
   return sub_root;
@@ -127,17 +108,17 @@ void rotate_left(BTNode * s) {
 
 void rotate_right(BTNode * s) {
   void * t;
-  BTNode * b, * c, * d, * l;
+  BTNode * c, * d, * l;
 
   l = s->parent;
 
   c = s->right;
   d = l->right;
 
-  l->left = s->left; if (s->left) s->left->parent = l;
-  l->right = s;
+  l->left = s->left; if (l->left) l->left->parent = l;
   s->left = s->right;
-  s->right = l->right; if (l->right) l->right->parent = s;
+  s->right = l->right; if (l->right) l->right->parent = l;
+  l->right = s;
 
   t = s->bucket;
   s->bucket = l->bucket;
@@ -154,20 +135,16 @@ void avl_tree_insert ( AVLTree * t, void * p ) {
     if (parent->balance_factor > 1) { // Left-left or Left-right
       if (parent->left->balance_factor < 0) { // Left-right
         rotate_left(parent->left->right);
-        bst_update_heights(parent->left);
       }
-      rotate_right(parent); // happens in both LL and Lr cases
-      bst_update_heights(parent);
+      rotate_right(parent->left); // happens in both LL and Lr cases
+      bst_update_heights_bubble_upward(parent->right);
     } else if (parent->balance_factor < -1) { // Right-left or Right-right
       if (parent->right->balance_factor > 0) {
         rotate_right(parent->right);
-        bst_update_heights(parent->right);
       }
-      rotate_left(parent);
-      bst_update_heights(parent);
-    } else {
-      break;
+      rotate_left(parent->right->left);
     }
+    parent = parent->parent;
   }
 }
 
