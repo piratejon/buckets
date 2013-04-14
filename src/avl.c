@@ -23,6 +23,33 @@ int avl_tree_new_balance_factor ( BTNode * sub_root ) {
   return (sub_root->right ? sub_root->right->height : 0) - (sub_root->left ? sub_root->left->height : 0);
 }
 
+int avl_tree_new_height ( BTNode * sub_root ) {
+  return MAX2(sub_root->right ? sub_root->right->height : 0, sub_root->left ? sub_root->left->height : 0);
+}
+
+void rotate_to_the_left(BTNode * sub_root) {
+}
+
+_Bool rotate_to_the_right(BTNode * sub_root) {
+  /**
+    returns true if the height changed, false if not
+    **/
+  void * old_subroot_bucket = sub_root->bucket;
+  BTNode * left = sub_root->left;
+  sub_root->bucket = left->bucket;
+}
+
+_Bool avl_tree_correct_left_imbalance ( AVLTree * t, BTNode * sub_root ) {
+  // this is a left imbalance. is it left-left or left-right?
+  if (sub_root->balance_factor > 0) { // left-right
+    //  rotate sub_root->left->right to the left, then rotate
+  } else {
+    // left-left
+  }
+  // rotate sub_root->left to the right
+  return rotate_to_the_right(sub_root);
+}
+
 _Bool avl_tree_insert_at_node ( AVLTree * t, BTNode * sub_root, void * p ) {
   /**
     returns true if the height changed, false if not
@@ -45,8 +72,11 @@ _Bool avl_tree_insert_at_node ( AVLTree * t, BTNode * sub_root, void * p ) {
       }
     } else {
       if (avl_tree_insert_at_node(t, sub_root->left, p)) {
-        sub_root->height = sub_root->left->height + 1;
+        int tmp_height = avl_tree_new_height(sub_root);
         sub_root->balance_factor = avl_tree_new_balance_factor(sub_root);
+        if (sub_root->balance_factor == -2) {
+          avl_tree_correct_left_imbalance(t, sub_root);
+        }
         return true;
       } else {
         return false;
