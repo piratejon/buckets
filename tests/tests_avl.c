@@ -332,8 +332,8 @@ void avl_tree_insert_random ( void ) {
     bucket.p = i;
     avl_tree_insert(t, &bucket);
     ASSERT(t->root->count == i+1, "Wrong count after insert");
-    ASSERT(avl_verify_consistency(t->root)==true, "Tree inconsistent after insert");
   }
+  ASSERT(avl_verify_consistency(t->root)==true, "Tree inconsistent after insert");
 
   destroy_avl_tree(t);
 }
