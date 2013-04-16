@@ -35,3 +35,7 @@ tests/tests_avl.trs
 tests/tests_ds
 tests/tests_ds.log
 tests/tests_ds.trs
+src/libds_la-avl.lo
+src/libds_la-avl.o
+src/libds_la-ds.lo
+src/libds_la-ds.o
