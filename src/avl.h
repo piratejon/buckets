@@ -32,6 +32,7 @@ void destroy_btnode(BTNode *);
 BTNode * bst_insert ( AVLTree * t, void * p );
 _Bool avl_verify_consistency(BTNode * s);
 void avl_tree_traverse ( AVLTree * t, _Bool(*f)(BTNode*) );
+void * avl_tree_get_median ( AVLTree * t );
 
 #endif // _JS_AVL_H
 

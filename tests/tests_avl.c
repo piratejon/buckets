@@ -381,8 +381,7 @@ void avl_tree_find_median ( void ) {
   int i;
 
   for ( i = 0; i < 1000; i += 1 ) {
-    bucket.p = ib[i];
-    avl_tree_insert(t, &bucket);
+    avl_tree_insert(t, ib+i);
   }
 
   median = avl_tree_get_median(t);

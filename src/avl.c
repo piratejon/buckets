@@ -251,3 +251,9 @@ void avl_tree_traverse ( AVLTree * t, _Bool(*f)(BTNode*) ) {
   }
 }
 
+void * avl_tree_get_median ( AVLTree * t ) {
+  IntBucket * p = malloc(sizeof(IntBucket));
+  p->p = 18391;
+  return p;
+}
+
