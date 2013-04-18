@@ -251,9 +251,50 @@ void avl_tree_traverse ( AVLTree * t, _Bool(*f)(BTNode*) ) {
   }
 }
 
-void * avl_tree_get_median ( AVLTree * t ) {
-  IntBucket * p = malloc(sizeof(IntBucket));
-  p->p = 18391;
-  return p;
+BTNode * avl_tree_get_nth_item ( BTNode * t, int index ) {
+  int left_count, right_count;
+  while ( index <= t->count ) {
+    left_count = t->left ? t->left->count : 0;
+    right_count = t->right ? t->right->count : 0;
+
+    // fprintf(stderr, "looking at %d for index %d: (%d,%d,%d): ", ((IntBucket*)t->bucket)->p, index, left_count, t->multiplicity, right_count);
+
+    if ( index <= left_count ) {
+      // fprintf(stderr, "going left\n");
+      t = t->left;
+      continue;
+    }
+
+    index -= left_count;
+    
+    if ( index <= t->multiplicity ) {
+      // fprintf(stderr, "found it\n");
+      return t;
+    }
+
+    index -= t->multiplicity;
+    
+    if ( index <= right_count ) {
+      // fprintf(stderr, "going right\n");
+      t = t->right;
+      continue;
+    }
+
+    return NULL;
+  }
+
+  return t;
+}
+
+BTNode * avl_tree_get_median ( AVLTree * t ) {
+  if ( t->root ) {
+    if ( t->root->count > 0 ) {
+      return avl_tree_get_nth_item ( t->root, t->root->count / 2 );
+    } else {
+      return NULL;
+    }
+  } else {
+    return NULL;
+  }
 }
 
