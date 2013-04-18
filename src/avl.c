@@ -217,3 +217,37 @@ _Bool avl_verify_consistency(BTNode * s) {
   return true;
 }
 
+void avl_tree_traverse ( AVLTree * t, _Bool(*f)(BTNode*) ) {
+  BTNode * cur, * last;
+
+  cur = t->root;
+  if (cur) {
+    last = t->root->parent;
+    while (cur) {
+      if ( last == cur->parent ) { // coming down
+        last = cur;
+        if (cur->left) { // go left if we can
+          cur = cur->left;
+        } else if (cur->right) { // go right if we can't
+          if (!(*f)(cur)) break;
+          cur = cur->right;
+        } else { // as a last resort, go back up
+          if (!(*f)(cur)) break;
+          cur = cur->parent;
+        }
+      } else if ( last == cur->left ) { // coming up from the left
+        last = cur;
+        if (!(*f)(cur)) break; // print out
+        if (cur->right) { // go right if we can
+          cur = cur->right;
+        } else { // go back up
+          cur = cur->parent;
+        }
+      } else if ( last == cur->right ) { // coming up from the right, just go up
+        last = cur;
+        cur = cur->parent;
+      }
+    }
+  }
+}
+

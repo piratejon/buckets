@@ -328,8 +328,8 @@ void avl_tree_insert_random ( void ) {
 
   srand(12345678);
 
-  for ( i = 0; i < 1000000; i += 1 ) {
-    bucket.p = i;
+  for ( i = 0; i < 100000; i += 1 ) {
+    bucket.p = rand();
     avl_tree_insert(t, &bucket);
     ASSERT(t->root->count == i+1, "Wrong count after insert");
   }
@@ -339,10 +339,11 @@ void avl_tree_insert_random ( void ) {
 }
 
 _Bool doit(BTNode * cur) {
+  printf("traverse: %d\n", ((IntBucket*)cur->bucket)->p);
   return true;
 }
 
-void avl_tree_iterate ( void ) {
+void avl_tree_traverse_test ( void ) {
   AVLTree * t = init_avl_tree(sizeof(IntBucket), &bucket_int_compare);
   IntBucket bucket;
 
@@ -350,14 +351,12 @@ void avl_tree_iterate ( void ) {
 
   srand(12345678);
 
-  for ( i = 0; i < 100000; i += 1 ) {
-    bucket.p = i;
+  for ( i = 0; i < 1000; i += 1 ) {
+    bucket.p = rand();
     avl_tree_insert(t, &bucket);
-    // ASSERT(t->root->count == i+1, "Wrong count after insert");
   }
-  // ASSERT(avl_verify_consistency(t->root)==true, "Tree inconsistent after insert");
 
-  avl_tree_iterate(t, doit);
+  avl_tree_traverse(t, doit);
 
   destroy_avl_tree(t);
 }
@@ -372,6 +371,6 @@ void do_tests ( void )
   TEST ( avl_tree_insert_elements );
   TEST ( avl_tree_insert_many );
   TEST ( avl_tree_insert_random );
-  TEST ( avl_tree_iterate );
+  TEST ( avl_tree_traverse_test );
 }
 
