@@ -415,7 +415,7 @@ void avl_tree_test_delete ( void ) {
   ASSERT(avl_verify_consistency(t->root), "Tree not consistent.");
 
   median_node = avl_tree_get_median(t);
-  ASSERT(avl_delete_node(median_node), "Failed to delete node.");
+  avl_delete_node(median_node);
   ASSERT(avl_verify_consistency(t->root), "Tree inconsistent after delete.");
 
   destroy_avl_tree(t);

@@ -109,12 +109,9 @@ void rotate_left(BTNode * s) {
 
 void rotate_right(BTNode * s) {
   void * t;
-  BTNode * c, * d, * l;
+  BTNode * l;
 
   l = s->parent;
-
-  c = s->right;
-  d = l->right;
 
   l->left = s->left; if (l->left) l->left->parent = l;
   s->left = s->right;
@@ -298,7 +295,41 @@ BTNode * avl_tree_get_median ( AVLTree * t ) {
   }
 }
 
-_Bool avl_delete_node ( BTNode * d ) {
-  return true;
+BTNode * in_order_successor ( BTNode * d ) {
+  BTNode * successor = d->right;
+  if ( successor ) while ( successor->left ) successor = successor->left;
+  return successor;
+}
+
+BTNode * in_order_predecessor ( BTNode * d ) {
+  BTNode * predecessor = d->left;
+  if ( predecessor ) while ( predecessor->right ) predecessor = predecessor->right;
+  return predecessor;
+}
+
+void avl_delete_node ( BTNode * d ) {
+  BTNode * r;
+  while ( 1 ) { // O(lg n)
+    if ( d->left ) {
+      r = in_order_predecessor(d);
+      d->bucket = r->bucket;
+      d = r;
+    } else if ( d->right ) {
+      r = in_order_successor(d);
+      d->bucket = r->bucket;
+      d = r;
+    } else {
+      r = d;
+      if (d->parent) {
+        if (d->parent->right == r) d->parent->right = NULL;
+        else if (d->parent->left == r) d->parent->left = NULL;
+        d->parent->count -= d->count;
+        bst_update_heights_bubble_upward(d->parent);
+      }
+      // r->bucket = NULL;
+      destroy_btnode(r);
+      break;
+    }
+  }
 }
 
