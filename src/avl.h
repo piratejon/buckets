@@ -34,6 +34,7 @@ _Bool avl_verify_consistency(BTNode * s);
 void avl_tree_traverse ( AVLTree * t, _Bool(*f)(BTNode*) );
 BTNode * avl_tree_get_median ( AVLTree * t );
 BTNode * avl_tree_get_nth_item ( BTNode * t, int index );
+_Bool avl_delete_node ( BTNode * d );
 
 #endif // _JS_AVL_H
 

@@ -298,3 +298,7 @@ BTNode * avl_tree_get_median ( AVLTree * t ) {
   }
 }
 
+_Bool avl_delete_node ( BTNode * d ) {
+  return true;
+}
+
