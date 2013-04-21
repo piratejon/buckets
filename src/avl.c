@@ -28,9 +28,16 @@ int avl_tree_new_height ( BTNode * sub_root ) {
   return MAX2(sub_root->right ? sub_root->right->height : 0, sub_root->left ? sub_root->left->height : 0) + 1;
 }
 
+int avl_tree_new_count ( BTNode * sub_root ) {
+  return (sub_root->left ? sub_root->left->count : 0)
+    + (sub_root->right ? sub_root->right->count : 0)
+    + sub_root->multiplicity;
+}
+
 void bst_update_height_no_bubble(BTNode * sub_root) {
   sub_root->height = avl_tree_new_height(sub_root);
   sub_root->balance_factor = avl_tree_new_balance_factor(sub_root);
+  sub_root->count = avl_tree_new_count(sub_root);
 }
 
 void bst_update_heights_bubble_upward(BTNode * sub_root) {
@@ -123,26 +130,15 @@ void rotate_right(BTNode * s) {
   l->bucket = t;
 }
 
-void avl_tree_insert ( AVLTree * t, void * p ) {
-  BTNode * new_node, * parent;
-
-  new_node = bst_insert(t, p);
-  parent = new_node->parent;
-
+void avl_tree_bubble_up ( BTNode * parent ) {
   while (parent) { // O(lg n) AVL invariant inspection
     if (parent->balance_factor > 1) { // Left-left or Left-right
       if (parent->left->balance_factor < 0) { // Left-right
         rotate_left(parent->left->right);
         bst_update_heights_bubble_upward(parent->left->left);
-        if (!avl_verify_consistency(t->root)) {
-          fprintf(stderr, "left-heavy rotate left: Oh Shit!\n");
-        }
       }
       rotate_right(parent->left); // happens in both LL and Lr cases
       bst_update_heights_bubble_upward(parent->right);
-      if (!avl_verify_consistency(t->root)) {
-        fprintf(stderr, "left-heavy rotate right: Oh Shit!\n");
-      }
     } else if (parent->balance_factor < -1) { // Right-left or Right-right
       if (parent->right->balance_factor > 0) { // Right-left
         rotate_right(parent->right->left);
@@ -153,6 +149,10 @@ void avl_tree_insert ( AVLTree * t, void * p ) {
     }
     parent = parent->parent;
   }
+}
+
+void avl_tree_insert ( AVLTree * t, void * p ) {
+  avl_tree_bubble_up ( (bst_insert(t,p))->parent );
 }
 
 int bucket_int_compare ( IntBucket * a, IntBucket * b) {
@@ -320,13 +320,12 @@ void avl_delete_node ( BTNode * d ) {
       d = r;
     } else {
       r = d;
-      if (d->parent) {
-        if (d->parent->right == r) d->parent->right = NULL;
-        else if (d->parent->left == r) d->parent->left = NULL;
-        d->parent->count -= d->count;
-        bst_update_heights_bubble_upward(d->parent);
+      d = d->parent;
+      if (d) {
+        if (d->right == r) d->right = NULL;
+        else if (d->left == r) d->left = NULL;
+        bst_update_heights_bubble_upward(d);
       }
-      // r->bucket = NULL;
       destroy_btnode(r);
       break;
     }

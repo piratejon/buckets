@@ -280,7 +280,7 @@ void avl_tree_insert_many ( void )
 
   for (i = 0; i < insert_qty; i += 1) {
     avl_tree_insert(t, &(ib[i]));
-    fprintf(stderr, "%d: %d\n", i, ib[i].p);
+    // fprintf(stderr, "%d: %d\n", i, ib[i].p);
     ASSERT(avl_verify_consistency(t->root)==true, "Tree inconsistent after inserting");
   }
 
@@ -313,7 +313,7 @@ void avl_tree_insert_many ( void )
 
   for (; i < 100; i += 1) {
     avl_tree_insert(t, &(ib[i]));
-    fprintf(stderr, "%d: %d\n", i, ib[i].p);
+    // fprintf(stderr, "%d: %d\n", i, ib[i].p);
     ASSERT(avl_verify_consistency(t->root)==true, "Tree inconsistent after inserting");
   }
 
@@ -339,7 +339,7 @@ void avl_tree_insert_random ( void ) {
 }
 
 _Bool doit(BTNode * cur) {
-  printf("traverse: %d\n", ((IntBucket*)cur->bucket)->p);
+  fprintf(stderr, "traverse: %d\n", ((IntBucket*)cur->bucket)->p);
   return true;
 }
 
@@ -393,7 +393,9 @@ void avl_tree_find_median ( void ) {
 void avl_tree_test_delete ( void ) {
   AVLTree * t = init_avl_tree(sizeof(IntBucket), &bucket_int_compare);
   BTNode * median_node;
+  IntBucket x;
 
+  /*
   IntBucket ib[] = {
     {30272}, {16274}, {11768}, {10231}, {28474}, { 7272}, {15032}, {13196}, {29825}, { 6840},
     {18444}, {18793}, {13786}, {21125}, {25311}, {23414}, {18374}, {24110}, {15465}, {26300},
@@ -412,11 +414,39 @@ void avl_tree_test_delete ( void ) {
   for ( i = 0; i < 100; i += 1 ) {
     avl_tree_insert(t, ib+i);
   }
-  ASSERT(avl_verify_consistency(t->root), "Tree not consistent.");
+  ASSERT(avl_verify_consistency(t->root), "Tree starting inconsistent.");
 
   median_node = avl_tree_get_median(t);
   avl_delete_node(median_node);
   ASSERT(avl_verify_consistency(t->root), "Tree inconsistent after delete.");
+  median_node = avl_tree_get_median(t);
+  fprintf(stderr, "New median: %d\n", ((IntBucket*)(median_node->bucket))->p);
+  ASSERT( ((IntBucket*)(median_node->bucket))->p == 18374, "Wrong median after delete." );
+
+  while ( t->root->count > 5 ) {
+    fprintf(stderr, "Deleting %d\n", ((IntBucket*)(t->root->bucket))->p);
+    avl_delete_node(t->root);
+    ASSERT(avl_verify_consistency(t->root), "Tree inconsistent after delete.");
+  }
+  */
+
+  x.p = 99; avl_tree_insert(t, &x);
+  x.p = 150; avl_tree_insert(t, &x);
+  x.p = 151; avl_tree_insert(t, &x);
+  ASSERT(((IntBucket*)(t->root->bucket))->p == 150, "Wrong root value.");
+  ASSERT(avl_verify_consistency(t->root), "Tree inconsistent after three inserts.");
+  ASSERT(t->root->count == 3, "Wrong number of nodes after delete.");
+
+  avl_delete_node(t->root->right);
+  ASSERT(((IntBucket*)(t->root->bucket))->p == 150, "Wrong root value after first delete.");
+  ASSERT(avl_verify_consistency(t->root), "Tree inconsistent after first delete.");
+  ASSERT(t->root->count == 2, "Wrong number of nodes after first delete.");
+
+  avl_delete_node(t->root->left);
+  ASSERT(((IntBucket*)(t->root->bucket))->p == 150, "Wrong root value after second delete.");
+  ASSERT(avl_verify_consistency(t->root), "Tree inconsistent after second delete.");
+  fprintf(stderr, "New count: %d\n", t->root->count);
+  ASSERT(t->root->count == 1, "Wrong number of nodes after second delete.");
 
   destroy_avl_tree(t);
 }
