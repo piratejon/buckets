@@ -344,3 +344,18 @@ void avl_delete_node ( AVLTree * t, BTNode * d ) {
   }
 }
 
+BTNode * avl_find_exact ( AVLTree * t, void * sought ) {
+  BTNode * cur = t->root;
+  while ( cur ) {
+    int cmp = (*t->cmp)(cur->bucket, sought);
+    if (cmp > 0) {
+      cur = cur->left;
+    } else if (cmp < 0) {
+      cur = cur->right;
+    } else {
+      break;
+    }
+  }
+  return cur;
+}
+

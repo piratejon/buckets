@@ -30,6 +30,7 @@ void avl_tree_traverse ( AVLTree * t, _Bool(*f)(BTNode*) );
 BTNode * avl_tree_get_median ( AVLTree * t );
 BTNode * avl_tree_get_nth_item ( BTNode * t, int index );
 void avl_delete_node ( AVLTree * t, BTNode * d );
+BTNode * avl_find_exact ( AVLTree * t, void * );
 
 #endif // _JS_AVL_H
 
