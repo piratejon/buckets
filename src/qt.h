@@ -5,10 +5,8 @@
 
 #include "avl.h"
 
-// #define MAX2(x,y) (((x)>(y))?(x):(y))
-
 typedef enum _tag_dim {
-  X, Y
+  X = 0, Y = 1
 } Dimension;
 
 typedef struct _tag_point {
@@ -30,6 +28,7 @@ typedef struct _tag_qt {
 
 QuadTree * init_quadtree(size_t);
 void destroy_quadtree ( QuadTree * qt );
+QTNode * qt_insert ( QuadTree * qt, Point *, void * );
 
 #endif // _JS_QT_H
 

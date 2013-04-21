@@ -16,12 +16,20 @@ int point_compare_y ( Point * a, Point * b ) {
   else return 0;
 }
 
+QTNode * init_qtnode(Point * pt, void * payload) {
+  QTNode * n;
+  n = malloc(sizeof(QTNode));
+  memcpy(&(n->p), pt, sizeof*pt);
+  n->payload = payload;
+  n->nw = n->ne = n->sw = n->se = NULL;
+  n->children = init_avl_tree(sizeof(Point), point_compare_x);
+  n->balance = X;
+  return n;
+}
+
 QuadTree * init_quadtree(size_t t) {
   QuadTree * qt = malloc(sizeof(QuadTree));
-  qt->root = malloc(sizeof(QTNode));
-  qt->root->nw = qt->root->ne = qt->root->sw = qt->root->se = NULL;
-  qt->root->children = init_avl_tree(sizeof(Point), point_compare_x);
-  qt->root->balance = X;
+  qt->root = NULL;
   return qt;
 }
 
@@ -35,7 +43,64 @@ void destroy_quadtree_nodes(QTNode * qt) {
 }
 
 void destroy_quadtree ( QuadTree * qt ) {
-  destroy_quadtree_nodes(qt->root);
+  if (qt->root) destroy_quadtree_nodes(qt->root);
   free(qt);
+}
+
+Dimension next_dimension ( Dimension d ) {
+  switch ( d ) {
+    case X: return Y;
+    case Y: // return X;
+    default: return X;
+  }
+}
+
+QTNode * qt_node_insert ( QTNode * qt, Point * pt, void * payload ) {
+  while ( 1 ) {
+    if ( pt->x > qt->p.x ) {
+      if ( pt->y > qt->p.y ) {
+        if ( qt->nw ) {
+          qt = qt->nw;
+        } else {
+          qt->nw = init_qtnode(pt, payload);
+          return qt->nw;
+        }
+      } else {
+        if ( qt->sw ) {
+          qt = qt->sw;
+        } else {
+          qt->sw = init_qtnode(pt, payload);
+          return qt->sw;
+        }
+      }
+    } else {
+      if ( pt->y > qt->p.y ) {
+        if ( qt->ne ) {
+          qt = qt->ne;
+        } else {
+          qt->ne = init_qtnode(pt, payload);
+          return qt->ne;
+        }
+      } else {
+        // silently drop duplicates
+        if ( pt->x == qt->p.x ) return NULL;
+        if ( qt->se ) {
+          qt = qt->se;
+        } else {
+          qt->se = init_qtnode(pt, payload);
+          return qt->se;
+        }
+      }
+    }
+  }
+}
+
+QTNode * qt_insert ( QuadTree * qt, Point * pt, void * payload ) {
+  if ( qt->root ) {
+    return qt_node_insert ( qt->root, pt, payload );
+  } else {
+    qt->root = init_qtnode(pt, payload);
+    return qt->root;
+  }
 }
 

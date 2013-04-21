@@ -22,14 +22,15 @@ void test_initialize_quadtree ( void )
 void test_insert_points ( void ) {
   QuadTree * qt = init_quadtree(sizeof(int));
 
-  int i, x, y;
+  int i;
 
   srand(1234567);
 
   for ( i = 0; i < 5000; i += 1 ) {
-    x = rand();
-    y = rand();
-    // qt_insert(x, y, i);
+    Point pt;
+    pt.x = rand();
+    pt.y = rand();
+    qt_insert(qt, &pt, &i);
   }
 
   destroy_quadtree(qt);
