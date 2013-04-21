@@ -462,8 +462,8 @@ void do_tests ( void )
   TEST ( avl_tree_bst_helpers );
   TEST ( avl_tree_insert_elements );
   TEST ( avl_tree_insert_many );
-  // TEST ( avl_tree_insert_random );
-  // TEST ( avl_tree_traverse_test );
+  TEST ( avl_tree_insert_random );
+  TEST ( avl_tree_traverse_test );
   TEST ( avl_tree_find_median );
   TEST ( avl_tree_test_delete );
 }
