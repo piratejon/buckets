@@ -30,11 +30,11 @@ int bucket_int_compare ( IntBucket *, IntBucket * );
 BTNode * init_btnode(size_t);
 void destroy_btnode(BTNode *);
 BTNode * bst_insert ( AVLTree * t, void * p );
-_Bool avl_verify_consistency(BTNode * s);
+_Bool avl_verify_consistency(AVLTree * t, BTNode * s);
 void avl_tree_traverse ( AVLTree * t, _Bool(*f)(BTNode*) );
 BTNode * avl_tree_get_median ( AVLTree * t );
 BTNode * avl_tree_get_nth_item ( BTNode * t, int index );
-void avl_delete_node ( BTNode * d );
+void avl_delete_node ( AVLTree * t, BTNode * d );
 
 #endif // _JS_AVL_H
 

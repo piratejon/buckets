@@ -181,7 +181,7 @@ void destroy_btnode(BTNode * b) {
   free(b);
 }
 
-_Bool avl_verify_consistency(BTNode * s) {
+_Bool avl_verify_consistency(AVLTree * t, BTNode * s) {
   if (s->parent) {
     if (s->parent->right != s && s->parent->left != s) {
       fprintf(stderr, "node %d's parent does not have it as a child\n", ((IntBucket*)s->bucket)->p);
@@ -194,7 +194,14 @@ _Bool avl_verify_consistency(BTNode * s) {
       fprintf(stderr, "node %d has wrong parent\n", ((IntBucket*)s->bucket)->p);
       return false;
     }
-    if (!avl_verify_consistency(s->left)) {
+    if (0 < (*(t->cmp))(s->left->bucket, s->bucket)) {
+      fprintf(stderr, "node %d less than left child %d\n",
+          ((IntBucket*)(s->bucket))->p,
+          ((IntBucket*)(s->left->bucket))->p
+          );
+      return false;
+    }
+    if (!avl_verify_consistency(t, s->left)) {
       fprintf(stderr, "left child inconsistent\n");
       return false;
     }
@@ -205,7 +212,14 @@ _Bool avl_verify_consistency(BTNode * s) {
       fprintf(stderr, "node %d has wrong parent\n", ((IntBucket*)s->bucket)->p);
       return false;
     }
-    if (!avl_verify_consistency(s->right)) {
+    if (0 > (*(t->cmp))(s->right->bucket, s->bucket)) {
+      fprintf(stderr, "node %d greater than right child %d\n",
+          ((IntBucket*)(s->bucket))->p,
+          ((IntBucket*)(s->right->bucket))->p
+          );
+      return false;
+    }
+    if (!avl_verify_consistency(t, s->right)) {
       fprintf(stderr, "right child inconsistent\n");
       return false;
     }
@@ -307,28 +321,40 @@ BTNode * in_order_predecessor ( BTNode * d ) {
   return predecessor;
 }
 
-void avl_delete_node ( BTNode * d ) {
+void avl_delete_node ( AVLTree * t, BTNode * d ) {
   BTNode * r;
+  void * tmp;
   while ( 1 ) { // O(lg n)
     if ( d->left ) {
+      // swap up the in-order-predecessor
       r = in_order_predecessor(d);
+      tmp = d->bucket;
       d->bucket = r->bucket;
+      r->bucket = tmp;
       d = r;
     } else if ( d->right ) {
+      // swap up the in-order-successor
       r = in_order_successor(d);
+      tmp = d->bucket;
       d->bucket = r->bucket;
+      r->bucket = tmp;
       d = r;
     } else {
-      r = d;
-      d = d->parent;
-      if (d) {
-        if (d->right == r) d->right = NULL;
-        else if (d->left == r) d->left = NULL;
-        bst_update_heights_bubble_upward(d);
+      // no children, buck stops here
+      r = d->parent;
+      if (r) {
+        if (r->right == d) r->right = NULL;
+        else if (r->left == d) r->left = NULL;
       }
-      destroy_btnode(r);
+      d->parent = NULL;
+      destroy_btnode(d);
+      if (t->root == d) t->root = NULL;
       break;
     }
+  }
+  if (r) {
+    bst_update_heights_bubble_upward(r);
+    avl_tree_bubble_up(r);
   }
 }
 
