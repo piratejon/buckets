@@ -1,4 +1,5 @@
 #ifndef _JS_AVL_H
+#define _JS_AVL_H
 
 #include <sys/types.h>
 
