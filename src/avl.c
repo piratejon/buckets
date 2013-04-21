@@ -155,12 +155,6 @@ void avl_tree_insert ( AVLTree * t, void * p ) {
   avl_tree_bubble_up ( (bst_insert(t,p))->parent );
 }
 
-int bucket_int_compare ( IntBucket * a, IntBucket * b) {
-  if ( a->p > b->p ) return 1;
-  else if ( a->p < b->p ) return -1;
-  else return 0;
-}
-
 BTNode * init_btnode(size_t s) {
   BTNode * out = malloc(sizeof(BTNode));
   out->bucket = malloc(s);
@@ -184,21 +178,18 @@ void destroy_btnode(BTNode * b) {
 _Bool avl_verify_consistency(AVLTree * t, BTNode * s) {
   if (s->parent) {
     if (s->parent->right != s && s->parent->left != s) {
-      fprintf(stderr, "node %d's parent does not have it as a child\n", ((IntBucket*)s->bucket)->p);
+      fprintf(stderr, "node's parent does not have it as a child\n");
       return false;
     }
   }
 
   if (s->left) {
     if (s->left->parent != s) {
-      fprintf(stderr, "node %d has wrong parent\n", ((IntBucket*)s->bucket)->p);
+      fprintf(stderr, "node has wrong parent\n");
       return false;
     }
     if (0 < (*(t->cmp))(s->left->bucket, s->bucket)) {
-      fprintf(stderr, "node %d less than left child %d\n",
-          ((IntBucket*)(s->bucket))->p,
-          ((IntBucket*)(s->left->bucket))->p
-          );
+      fprintf(stderr, "node less than left child\n");
       return false;
     }
     if (!avl_verify_consistency(t, s->left)) {
@@ -209,14 +200,11 @@ _Bool avl_verify_consistency(AVLTree * t, BTNode * s) {
 
   if (s->right) {
     if (s->right->parent != s) {
-      fprintf(stderr, "node %d has wrong parent\n", ((IntBucket*)s->bucket)->p);
+      fprintf(stderr, "node has wrong parent\n");
       return false;
     }
     if (0 > (*(t->cmp))(s->right->bucket, s->bucket)) {
-      fprintf(stderr, "node %d greater than right child %d\n",
-          ((IntBucket*)(s->bucket))->p,
-          ((IntBucket*)(s->right->bucket))->p
-          );
+      fprintf(stderr, "node greater than right child\n");
       return false;
     }
     if (!avl_verify_consistency(t, s->right)) {
@@ -267,8 +255,6 @@ BTNode * avl_tree_get_nth_item ( BTNode * t, int index ) {
   while ( index <= t->count ) {
     left_count = t->left ? t->left->count : 0;
     right_count = t->right ? t->right->count : 0;
-
-    // fprintf(stderr, "looking at %d for index %d: (%d,%d,%d): ", ((IntBucket*)t->bucket)->p, index, left_count, t->multiplicity, right_count);
 
     if ( index <= left_count ) {
       // fprintf(stderr, "going left\n");

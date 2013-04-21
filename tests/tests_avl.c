@@ -4,6 +4,16 @@
 #include "avl.h"
 #include "tests.h"
 
+typedef struct _tag_int_bucket {
+  int p;
+} IntBucket;
+
+int bucket_int_compare ( IntBucket * a, IntBucket * b) {
+  if ( a->p > b->p ) return 1;
+  else if ( a->p < b->p ) return -1;
+  else return 0;
+}
+
 void sanity_check_zero ( void )
 {
   ASSERT ( 0 == 0, "Zero failed to be equal to zero." );
@@ -32,7 +42,7 @@ void avl_tree_init_destroy ( void )
 
 void avl_tree_insert_elements ( void )
 {
-  IntBucket *a,*b,*c,*d,*e,*f,*g,*h;
+  IntBucket *a,*b,*c,*d,*e,*f,*g;
   a = malloc(sizeof(IntBucket));
   b = malloc(sizeof(IntBucket));
   c = malloc(sizeof(IntBucket));
