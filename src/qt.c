@@ -104,3 +104,15 @@ QTNode * qt_insert ( QuadTree * qt, Point * pt, void * payload ) {
   }
 }
 
+void qt_node_traverse ( QTNode * qt, _Bool(*f)(QTNode*) ) {
+  (*f)(qt);
+  if ( qt->nw ) qt_node_traverse(qt->nw, f);
+  if ( qt->ne ) qt_node_traverse(qt->ne, f);
+  if ( qt->sw ) qt_node_traverse(qt->sw, f);
+  if ( qt->se ) qt_node_traverse(qt->se, f);
+}
+
+void qt_traverse ( QuadTree * qt, _Bool(*f)(QTNode*) ) {
+  if ( qt->root ) qt_node_traverse(qt->root, f);
+}
+

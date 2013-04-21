@@ -19,6 +19,10 @@ void test_initialize_quadtree ( void )
   destroy_quadtree(qt);
 }
 
+_Bool print_qt_node_int_pointer ( QTNode * qt ) {
+  printf("(%d, %d): %d\n", qt->p.x, qt->p.y, (int)(qt->payload));
+}
+
 void test_insert_points ( void ) {
   QuadTree * qt = init_quadtree(sizeof(int));
 
@@ -30,8 +34,10 @@ void test_insert_points ( void ) {
     Point pt;
     pt.x = rand();
     pt.y = rand();
-    qt_insert(qt, &pt, &i);
+    qt_insert(qt, &pt, i);
   }
+
+  qt_traverse(qt, print_qt_node_int_pointer);
 
   destroy_quadtree(qt);
 }
