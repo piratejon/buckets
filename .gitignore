@@ -39,3 +39,10 @@ src/libds_la-avl.lo
 src/libds_la-avl.o
 src/libds_la-ds.lo
 src/libds_la-ds.o
+src/libds_la-qt.lo
+src/libds_la-qt.o
+tests/tests_qt
+tests/tests_qt-tests_main.o
+tests/tests_qt-tests_qt.o
+tests/tests_qt.log
+tests/tests_qt.trs

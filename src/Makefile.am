@@ -2,7 +2,7 @@
 
 noinst_LTLIBRARIES = libds.la
 libds_la_CFLAGS = -std=c99 -Wall -g3
-libds_la_SOURCES = ds.c avl.c
+libds_la_SOURCES = ds.c avl.c qt.c
 
 bin_PROGRAMS = ds
 ds_SOURCES = ds_main.c
